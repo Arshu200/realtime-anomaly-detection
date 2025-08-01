@@ -1,0 +1,18 @@
+Defaulting to user installation because normal site-packages is not writeable
+Collecting influxdb-client
+  Downloading influxdb_client-1.49.0-py3-none-any.whl.metadata
+     - 65.5 kB 234.8 MB/s 0:00:00
+Collecting reactivex>=4.0.4 (from influxdb-client)
+  Downloading reactivex-4.0.4-py3-none-any.whl.metadata
+     - 5.5 kB ? 0:00:00
+Requirement already satisfied: certifi>=14.05.14 in /usr/lib/python3/dist-packages (from influxdb-client) (2023.11.17)
+Requirement already satisfied: python-dateutil>=2.5.3 in /usr/lib/python3/dist-packages (from influxdb-client) (2.8.2)
+Requirement already satisfied: setuptools>=21.0.0 in /usr/lib/python3/dist-packages (from influxdb-client) (68.1.2)
+Requirement already satisfied: urllib3>=1.26.0 in /usr/lib/python3/dist-packages (from influxdb-client) (2.0.7)
+Requirement already satisfied: typing-extensions<5.0.0,>=4.1.1 in /usr/lib/python3/dist-packages (from reactivex>=4.0.4->influxdb-client) (4.10.0)
+Downloading influxdb_client-1.49.0-py3-none-any.whl
+   - 746.3 kB 213.2 MB/s 0:00:00
+Downloading reactivex-4.0.4-py3-none-any.whl
+   - 217.8 kB 183.2 MB/s 0:00:00
+Installing collected packages: reactivex, influxdb-client
+Successfully installed influxdb-client-1.49.0 reactivex-4.0.4

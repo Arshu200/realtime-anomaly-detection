@@ -426,6 +426,9 @@ class CPUAnomalyDetector:
         is_anomaly = (cpu_value > threshold_upper) or (cpu_value < threshold_lower)
         anomaly_score = abs(cpu_value - pred_value) / (pred_upper - pred_lower + 1e-8)
         
+        # Calculate confidence score
+        confidence_score = self.calculate_confidence_score(cpu_value, pred_value, pred_lower, pred_upper)
+        
         result = {
             'timestamp': timestamp,
             'actual_value': cpu_value,
@@ -435,10 +438,61 @@ class CPUAnomalyDetector:
             'threshold_lower': threshold_lower,
             'threshold_upper': threshold_upper,
             'is_anomaly': is_anomaly,
-            'anomaly_score': anomaly_score
+            'anomaly_score': anomaly_score,
+            'confidence_score': confidence_score
         }
         
         return result
+    
+    def calculate_confidence_score(self, actual_value, predicted_value, pred_lower, pred_upper):
+        """
+        Calculate confidence score for anomaly detection.
+        
+        This score represents the confidence in the anomaly detection result,
+        taking into account the prediction interval width and the distance from prediction.
+        
+        Args:
+            actual_value: Actual CPU usage value
+            predicted_value: Predicted CPU usage value  
+            pred_lower: Lower bound of prediction interval
+            pred_upper: Upper bound of prediction interval
+            
+        Returns:
+            float: Confidence score between 0 and 1
+        """
+        # Calculate prediction interval width (uncertainty)
+        interval_width = pred_upper - pred_lower
+        
+        # Calculate normalized distance from prediction
+        distance_from_prediction = abs(actual_value - predicted_value)
+        
+        # Avoid division by zero
+        if interval_width <= 1e-8:
+            return 0.5  # Neutral confidence when no uncertainty info
+            
+        # Calculate raw confidence based on distance relative to interval width
+        # Values far from prediction (relative to interval) have higher confidence
+        # Values close to prediction boundaries have lower confidence
+        raw_confidence = distance_from_prediction / interval_width
+        
+        # Apply sigmoid transformation to get score between 0 and 1
+        # This gives smooth transition and reasonable confidence scores
+        confidence = 1 / (1 + np.exp(-2 * (raw_confidence - 0.5)))
+        
+        # Additional confidence boost for values clearly outside prediction interval
+        if actual_value > pred_upper or actual_value < pred_lower:
+            # Outside interval - boost confidence
+            outside_distance = max(
+                actual_value - pred_upper if actual_value > pred_upper else 0,
+                pred_lower - actual_value if actual_value < pred_lower else 0
+            )
+            outside_boost = min(0.3, outside_distance / interval_width * 0.2)
+            confidence = min(1.0, confidence + outside_boost)
+        
+        # Ensure confidence is within valid range
+        confidence = max(0.0, min(1.0, confidence))
+        
+        return confidence
     
     def save_model(self, model_path='cpu_anomaly_model.pkl', metadata_path='model_metadata.json'):
         """Save the trained model and metadata."""
