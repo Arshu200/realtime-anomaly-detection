@@ -1,0 +1,39 @@
+# Configuration file for CPU Anomaly Detection System
+# You can override these defaults using command line arguments
+
+# Prometheus Configuration
+prometheus_url: "http://localhost:9090"
+prometheus_timeout: 30
+prometheus_retries: 3
+
+# Model Configuration
+threshold_multiplier: 2.0
+interval_width: 0.95
+train_ratio: 0.8
+
+# Monitoring Configuration
+monitoring_interval: 30
+log_level: "INFO"
+log_dir: "logs"
+
+# Data Processing Configuration
+resample_frequency: "30T"  # 30 minutes
+eda_enabled: true
+plot_generation: true
+
+# Model Evaluation Configuration
+simulation_anomaly_ratio: 0.05
+evaluation_plots: true
+
+# File Paths
+default_dataset: "dataset.csv"
+default_model_path: "cpu_anomaly_model.pkl"
+model_metadata_path: "model_metadata.json"
+
+# Prophet Model Parameters
+prophet_daily_seasonality: true
+prophet_weekly_seasonality: true
+prophet_yearly_seasonality: false
+prophet_changepoint_prior_scale: 0.05
+prophet_seasonality_prior_scale: 10.0
+prophet_uncertainty_samples: 1000

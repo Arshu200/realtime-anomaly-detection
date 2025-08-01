@@ -1,0 +1,1 @@
+{"event_type": "anomaly_detected", "timestamp": "2025-08-01T07:59:05.733111", "cpu_value": 0.5033401953948119, "predicted_value": 0.7160630542985161, "anomaly_score": 2.3487556413301913, "threshold_upper": 0.8075030052975024, "threshold_lower": 0.6263663798666214, "instance": "simulated", "anomaly_type": "statistical", "severity": "HIGH"}

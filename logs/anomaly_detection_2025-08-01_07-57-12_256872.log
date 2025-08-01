@@ -1,0 +1,64 @@
+2025-08-01 07:57:12 | INFO     | logging_config:__init__:37 | Logging system initialized with level: INFO
+2025-08-01 07:57:12 | INFO     | __main__:__init__:40 | Anomaly Detection System initialized
+2025-08-01 07:57:12 | INFO     | __main__:main:408 | Starting training mode...
+2025-08-01 07:57:12 | INFO     | __main__:prepare_data:44 | Preparing data from dataset.csv
+2025-08-01 07:57:12 | INFO     | data_preprocessing:load_data:30 | Loading data from dataset.csv
+2025-08-01 07:57:12 | INFO     | data_preprocessing:load_data:37 | Data loaded successfully. Shape: (2108, 2)
+2025-08-01 07:57:12 | INFO     | data_preprocessing:load_data:38 | Date range: 2025-06-01 00:00:00 to 2025-07-29 12:40:00
+2025-08-01 07:57:12 | INFO     | data_preprocessing:resample_data:50 | Resampling data to 30T intervals using interpolate
+2025-08-01 07:57:12 | INFO     | data_preprocessing:resample_data:71 | Resampled data shape: (2810, 2)
+2025-08-01 07:57:12 | INFO     | __main__:train_model:61 | Training anomaly detection model...
+2025-08-01 07:57:12 | INFO     | anomaly_model:train_model:74 | Training Prophet model with 80.0% of data...
+2025-08-01 07:57:12 | INFO     | anomaly_model:prepare_data:50 | Preparing data for Prophet model...
+2025-08-01 07:57:12 | INFO     | anomaly_model:prepare_data:61 | Data prepared. Shape: (2810, 2)
+2025-08-01 07:57:12 | INFO     | anomaly_model:prepare_data:62 | Date range: 2025-06-01 00:00:00 to 2025-07-29 12:30:00
+2025-08-01 07:57:12 | INFO     | anomaly_model:train_model:84 | Training data: 2248 points
+2025-08-01 07:57:12 | INFO     | anomaly_model:train_model:85 | Test data: 562 points
+2025-08-01 07:57:12 | INFO     | anomaly_model:train_model:102 | Fitting Prophet model...
+2025-08-01 07:57:12 | INFO     | anomaly_model:train_model:105 | Model training completed successfully!
+2025-08-01 07:57:12 | INFO     | anomaly_model:predict:118 | Generating predictions...
+2025-08-01 07:57:12 | INFO     | anomaly_model:predict:133 | Predictions generated for 2810 time points
+2025-08-01 07:57:12 | INFO     | anomaly_model:detect_anomalies:147 | Detecting anomalies...
+2025-08-01 07:57:12 | INFO     | anomaly_model:detect_anomalies:179 | Detected 36 anomalies out of 562 points (6.41%)
+2025-08-01 07:57:12 | INFO     | anomaly_model:evaluate_model:189 | Evaluating model performance...
+2025-08-01 07:57:12 | INFO     | anomaly_model:evaluate_model:213 | === Model Performance ===
+2025-08-01 07:57:12 | INFO     | anomaly_model:evaluate_model:214 | MAE: 0.022111
+2025-08-01 07:57:12 | INFO     | anomaly_model:evaluate_model:215 | RMSE: 0.028924
+2025-08-01 07:57:12 | INFO     | anomaly_model:evaluate_model:216 | MAPE: 2.98%
+2025-08-01 07:57:12 | INFO     | anomaly_model:evaluate_model:217 | Anomaly Rate: 6.41%
+2025-08-01 07:57:12 | INFO     | logging_config:log_model_training:215 | Model training completed - prophet, Train size: 2248, Time: 0.53s
+2025-08-01 07:57:12 | INFO     | logging_config:log_model_evaluation:235 | Model evaluation - Precision: 0.000, Recall: 0.000, F1: 0.000
+2025-08-01 07:57:12 | INFO     | anomaly_model:save_model:474 | Model saved to cpu_anomaly_model.pkl
+2025-08-01 07:57:12 | INFO     | anomaly_model:save_model:475 | Metadata saved to model_metadata.json
+2025-08-01 07:57:12 | INFO     | __main__:train_model:111 | Model training completed in 0.53 seconds
+2025-08-01 07:57:12 | INFO     | __main__:evaluate_with_simulation:120 | Running evaluation with simulated anomalies...
+2025-08-01 07:57:12 | INFO     | model_evaluation:simulate_anomalies:37 | Simulating anomalies with 5.0% anomaly ratio
+2025-08-01 07:57:12 | INFO     | model_evaluation:simulate_anomalies:80 | Simulated 140 anomalies:
+2025-08-01 07:57:12 | INFO     | model_evaluation:simulate_anomalies:81 | - Spikes: 46
+2025-08-01 07:57:12 | INFO     | model_evaluation:simulate_anomalies:82 | - Dips: 44
+2025-08-01 07:57:12 | INFO     | model_evaluation:simulate_anomalies:83 | - Drifts: 393
+2025-08-01 07:57:12 | INFO     | anomaly_model:prepare_data:50 | Preparing data for Prophet model...
+2025-08-01 07:57:12 | INFO     | anomaly_model:prepare_data:61 | Data prepared. Shape: (2810, 2)
+2025-08-01 07:57:12 | INFO     | anomaly_model:prepare_data:62 | Date range: 2025-06-01 00:00:00 to 2025-07-29 12:30:00
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:99 | Evaluating detection performance...
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:139 | === Detection Performance ===
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:140 | Precision: 0.4667
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:141 | Recall: 0.6500
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:142 | F1-Score: 0.5433
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:143 | Specificity: 0.9610
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:144 | False Positive Rate: 0.0390
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:145 | True Positives: 91
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:146 | False Positives: 104
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:147 | True Negatives: 2566
+2025-08-01 07:57:13 | INFO     | model_evaluation:evaluate_detection_performance:148 | False Negatives: 49
+2025-08-01 07:57:13 | INFO     | model_evaluation:plot_confusion_matrix:168 | Confusion matrix plot saved to confusion_matrix.png
+2025-08-01 07:57:14 | INFO     | model_evaluation:plot_roc_curve:194 | ROC curve plot saved to roc_curve.png
+2025-08-01 07:57:15 | INFO     | model_evaluation:plot_detection_overview:297 | Detection overview plot saved to detection_overview.png
+2025-08-01 07:57:15 | INFO     | model_evaluation:evaluate_detection_rate_by_threshold:380 | Optimal threshold: 1.100 (F1: 0.568)
+2025-08-01 07:57:16 | INFO     | model_evaluation:plot_threshold_analysis:415 | Threshold analysis plot saved to threshold_analysis.png
+2025-08-01 07:57:16 | INFO     | __main__:evaluate_with_simulation:201 | Optimal threshold found: 1.100
+2025-08-01 07:57:16 | INFO     | model_evaluation:generate_evaluation_report:472 | Evaluation report saved to evaluation_report.txt
+2025-08-01 07:57:16 | INFO     | __main__:evaluate_with_simulation:206 | Evaluation with simulated anomalies completed
+2025-08-01 07:57:16 | INFO     | __main__:main:419 | Training completed successfully!
+2025-08-01 07:57:16 | INFO     | __main__:generate_system_report:310 | Generating system report...
+2025-08-01 07:57:16 | INFO     | __main__:generate_system_report:352 | System report saved to logs/system_report.json

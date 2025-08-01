@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-08-01T07:57:16.007315",
+  "config": {
+    "log_level": "INFO",
+    "log_dir": "logs",
+    "prometheus_url": "http://localhost:9090",
+    "monitoring_interval": 30,
+    "threshold_multiplier": 2.0,
+    "model_path": "cpu_anomaly_model.pkl",
+    "generate_plots": false,
+    "run_eda": false,
+    "train_ratio": 0.8,
+    "interval_width": 0.95,
+    "simulation_anomaly_ratio": 0.05,
+    "generate_evaluation_plots": true
+  },
+  "system_status": {},
+  "model_performance": {
+    "mae": 0.022110817033415085,
+    "mse": 0.0008366230050386451,
+    "rmse": 0.028924436123088815,
+    "mape": 2.976343484546255,
+    "num_normal_points": 526,
+    "num_anomalies": 36,
+    "anomaly_rate": 6.405693950177936
+  },
+  "recent_activity": {
+    "report_timestamp": "2025-08-01T07:57:16.007532",
+    "analysis_period_hours": 24,
+    "total_events": 9,
+    "total_anomalies": 0,
+    "anomaly_rate": 0,
+    "event_counts": {
+      "model_training": 5,
+      "model_evaluation": 4
+    },
+    "severity_counts": {},
+    "cpu_statistics": {}
+  }
+}
