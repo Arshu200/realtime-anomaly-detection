@@ -1,0 +1,15 @@
+{
+  "threshold_multiplier": 2.0,
+  "interval_width": 0.95,
+  "model_performance": {
+    "mae": 0.022110817033415085,
+    "mse": 0.0008366230050386451,
+    "rmse": 0.028924436123088815,
+    "mape": 2.976343484546255,
+    "num_normal_points": 526,
+    "num_anomalies": 36,
+    "anomaly_rate": 6.405693950177936
+  },
+  "train_data_size": 2248,
+  "trained_at": "2025-08-01T07:57:12.816562"
+}

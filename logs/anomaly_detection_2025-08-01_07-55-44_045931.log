@@ -1,0 +1,31 @@
+2025-08-01 07:55:44 | INFO     | logging_config:__init__:37 | Logging system initialized with level: INFO
+2025-08-01 07:55:44 | INFO     | __main__:__init__:40 | Anomaly Detection System initialized
+2025-08-01 07:55:44 | INFO     | __main__:main:394 | Starting training mode...
+2025-08-01 07:55:44 | INFO     | __main__:prepare_data:44 | Preparing data from dataset.csv
+2025-08-01 07:55:44 | INFO     | data_preprocessing:load_data:30 | Loading data from dataset.csv
+2025-08-01 07:55:44 | INFO     | data_preprocessing:load_data:37 | Data loaded successfully. Shape: (2108, 2)
+2025-08-01 07:55:44 | INFO     | data_preprocessing:load_data:38 | Date range: 2025-06-01 00:00:00 to 2025-07-29 12:40:00
+2025-08-01 07:55:44 | INFO     | data_preprocessing:resample_data:50 | Resampling data to 30T intervals using interpolate
+2025-08-01 07:55:44 | INFO     | data_preprocessing:resample_data:71 | Resampled data shape: (2810, 2)
+2025-08-01 07:55:44 | INFO     | __main__:train_model:61 | Training anomaly detection model...
+2025-08-01 07:55:44 | INFO     | anomaly_model:train_model:74 | Training Prophet model with 80.0% of data...
+2025-08-01 07:55:44 | INFO     | anomaly_model:prepare_data:50 | Preparing data for Prophet model...
+2025-08-01 07:55:44 | INFO     | anomaly_model:prepare_data:61 | Data prepared. Shape: (2810, 2)
+2025-08-01 07:55:44 | INFO     | anomaly_model:prepare_data:62 | Date range: 2025-06-01 00:00:00 to 2025-07-29 12:30:00
+2025-08-01 07:55:44 | INFO     | anomaly_model:train_model:84 | Training data: 2248 points
+2025-08-01 07:55:44 | INFO     | anomaly_model:train_model:85 | Test data: 562 points
+2025-08-01 07:55:44 | INFO     | anomaly_model:train_model:102 | Fitting Prophet model...
+2025-08-01 07:55:44 | INFO     | anomaly_model:train_model:105 | Model training completed successfully!
+2025-08-01 07:55:44 | INFO     | anomaly_model:predict:118 | Generating predictions...
+2025-08-01 07:55:44 | INFO     | anomaly_model:predict:133 | Predictions generated for 2810 time points
+2025-08-01 07:55:44 | INFO     | anomaly_model:detect_anomalies:147 | Detecting anomalies...
+2025-08-01 07:55:44 | INFO     | anomaly_model:detect_anomalies:179 | Detected 34 anomalies out of 562 points (6.05%)
+2025-08-01 07:55:44 | INFO     | anomaly_model:evaluate_model:189 | Evaluating model performance...
+2025-08-01 07:55:44 | INFO     | anomaly_model:evaluate_model:213 | === Model Performance ===
+2025-08-01 07:55:44 | INFO     | anomaly_model:evaluate_model:214 | MAE: 0.022412
+2025-08-01 07:55:44 | INFO     | anomaly_model:evaluate_model:215 | RMSE: 0.029542
+2025-08-01 07:55:44 | INFO     | anomaly_model:evaluate_model:216 | MAPE: 3.01%
+2025-08-01 07:55:44 | INFO     | anomaly_model:evaluate_model:217 | Anomaly Rate: 6.05%
+2025-08-01 07:55:44 | INFO     | logging_config:log_model_training:215 | Model training completed - prophet, Train size: 2248, Time: 0.53s
+2025-08-01 07:55:44 | INFO     | logging_config:log_model_evaluation:235 | Model evaluation - Precision: 0.000, Recall: 0.000, F1: 0.000
+2025-08-01 07:55:44 | ERROR    | __main__:main:443 | System error: Object of type int64 is not JSON serializable

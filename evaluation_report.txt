@@ -1,0 +1,30 @@
+
+=== CPU Anomaly Detection Model Evaluation Report ===
+Generated at: 2025-08-01 07:57:16.006642
+
+CLASSIFICATION METRICS:
+- Precision: 0.4667
+- Recall: 0.6500
+- F1-Score: 0.5433
+- Specificity: 0.9610
+
+ERROR RATES:
+- False Positive Rate: 0.0390
+- False Negative Rate: 0.3500
+
+CONFUSION MATRIX:
+- True Positives: 91
+- False Positives: 104
+- True Negatives: 2566
+- False Negatives: 49
+
+ADDITIONAL METRICS:
+- AUC-ROC: 0.8496
+
+RECOMMENDATIONS:
+- Precision of 0.47 means 46.7% of detected anomalies are true anomalies
+- Recall of 0.65 means 65.0% of true anomalies are detected
+- F1-Score of 0.54 represents the harmonic mean of precision and recall
+
+- Consider increasing the anomaly threshold to reduce false positives
+- Model performance needs improvement - consider tuning parameters
