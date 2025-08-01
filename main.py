@@ -6,6 +6,7 @@ import time
 import argparse
 import pandas as pd
 import numpy as np
+import yaml
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from anomaly_model import CPUAnomalyDetector
 from model_evaluation import ModelEvaluator
 from prometheus_client import PrometheusClient, RealTimeAnomalyMonitor
 from logging_config import setup_logging, get_structured_logger
+from influxdb_storage import create_influxdb_storage, InfluxDBAnomalyStorage
 from loguru import logger
 
 
@@ -36,8 +38,49 @@ class AnomalyDetectionSystem:
         self.evaluator = None
         self.prometheus_client = None
         self.monitor = None
+        self.influxdb_storage = None
+        
+        # Initialize InfluxDB storage if enabled
+        self._setup_influxdb_storage()
         
         logger.info("Anomaly Detection System initialized")
+    
+    def _setup_influxdb_storage(self):
+        """Setup InfluxDB storage if enabled in configuration."""
+        influxdb_config = self.config.get('influxdb', {})
+        
+        if not influxdb_config.get('enabled', False):
+            logger.info("InfluxDB storage disabled in configuration")
+            return
+            
+        logger.info("Setting up InfluxDB storage...")
+        self.influxdb_storage = create_influxdb_storage(influxdb_config)
+        
+        if self.influxdb_storage:
+            logger.info("InfluxDB storage initialized successfully")
+        else:
+            logger.warning("InfluxDB storage initialization failed - continuing without storage")
+    
+    def _store_anomaly_data_safely(self, timestamp, actual_cpu, forecasted_cpu, is_anomaly, confidence_score):
+        """
+        Safely store anomaly data to InfluxDB with error handling.
+        
+        This method ensures that storage failures don't impact the detection performance.
+        """
+        if not self.influxdb_storage:
+            return False
+            
+        try:
+            return self.influxdb_storage.store_anomaly_data(
+                timestamp=timestamp,
+                actual_cpu=actual_cpu,
+                forecasted_cpu=forecasted_cpu,
+                is_anomaly=is_anomaly,
+                confidence_score=confidence_score
+            )
+        except Exception as e:
+            logger.error(f"Failed to store anomaly data: {e}")
+            return False
     
     def prepare_data(self, dataset_path: str):
         """Prepare training data."""
@@ -238,7 +281,7 @@ class AnomalyDetectionSystem:
         # Create real-time monitor
         self.monitor = RealTimeAnomalyMonitor(self.prometheus_client, self.detector)
         
-        # Enhanced monitoring callback with structured logging
+        # Enhanced monitoring callback with structured logging and InfluxDB storage
         def enhanced_callback(cpu_data):
             # Log CPU usage
             self.structured_logger.log_cpu_usage(
@@ -259,6 +302,27 @@ class AnomalyDetectionSystem:
                     result['predicted_value'],
                     (result.get('prediction_lower', 0), result.get('prediction_upper', 1))
                 )
+                
+                # Store data in InfluxDB if available
+                try:
+                    # Calculate confidence score using the detector's method
+                    confidence_score = self.detector.calculate_confidence_score(
+                        result['actual_value'],
+                        result['predicted_value'],
+                        result.get('prediction_lower', result['predicted_value'] - 10),
+                        result.get('prediction_upper', result['predicted_value'] + 10)
+                    )
+                    
+                    # Store the data
+                    self._store_anomaly_data_safely(
+                        timestamp=result['timestamp'],
+                        actual_cpu=result['actual_value'],
+                        forecasted_cpu=result['predicted_value'],
+                        is_anomaly=result.get('is_anomaly', False),
+                        confidence_score=confidence_score
+                    )
+                except Exception as e:
+                    logger.debug(f"Error storing data to InfluxDB: {e}")
             
             # Log anomaly if detected
             if result.get('is_anomaly', False):
@@ -291,6 +355,11 @@ class AnomalyDetectionSystem:
         except Exception as e:
             logger.error(f"Monitoring error: {e}")
             self.structured_logger.log_system_status("error", "monitor", {"error": str(e)})
+        finally:
+            # Cleanup InfluxDB storage
+            if self.influxdb_storage:
+                logger.info("Cleaning up InfluxDB storage...")
+                self.influxdb_storage.close()
     
     def load_saved_model(self, model_path: str):
         """Load a previously saved model."""
@@ -377,11 +446,27 @@ def parse_arguments():
     return parser.parse_args()
 
 
+def load_config_from_file(config_file: str = 'config.yaml') -> dict:
+    """Load configuration from YAML file."""
+    config_path = Path(config_file)
+    
+    if config_path.exists():
+        logger.info(f"Loading configuration from {config_file}")
+        with open(config_path, 'r') as f:
+            return yaml.safe_load(f)
+    else:
+        logger.warning(f"Configuration file {config_file} not found, using defaults")
+        return {}
+
+
 def main():
     """Main entry point."""
     args = parse_arguments()
     
-    # Configuration
+    # Load configuration from file first
+    file_config = load_config_from_file('config.yaml')
+    
+    # Configuration - merge file config with command line arguments
     config = {
         'log_level': args.log_level,
         'log_dir': 'logs',
@@ -396,6 +481,11 @@ def main():
         'simulation_anomaly_ratio': 0.05,
         'generate_evaluation_plots': True
     }
+    
+    # Merge with file configuration (file config takes precedence for missing CLI args)
+    for key, value in file_config.items():
+        if key not in config or key in ['influxdb']:  # Always include influxdb config from file
+            config[key] = value
     
     # Initialize system
     system = AnomalyDetectionSystem(config)

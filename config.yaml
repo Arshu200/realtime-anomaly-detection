@@ -6,6 +6,19 @@ prometheus_url: "http://localhost:9090"
 prometheus_timeout: 30
 prometheus_retries: 3
 
+# InfluxDB Configuration
+influxdb:
+  enabled: true
+  url: "http://localhost:8086"
+  token: "PCIUyihftjXbIAQjR8g-xgEas7H5ssaEQG6ppz-V_w-bxnNeC3FM941sgC8Sclmjhs2VmD7PyGV1oOepRw8xrA=="
+  org: "test_anamoly"
+  bucket: "anomaly_detection"
+  batch_size: 100
+  flush_interval: 1000  # milliseconds
+  timeout: 10000  # milliseconds
+  retry_attempts: 3
+  retry_interval: 1000  # milliseconds
+
 # Model Configuration
 threshold_multiplier: 2.0
 interval_width: 0.95
