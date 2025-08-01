@@ -1,0 +1,126 @@
+version: '3.8'
+
+services:
+  influxdb:
+    image: influxdb:2.7
+    container_name: anomaly-influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+      - DOCKER_INFLUXDB_INIT_ORG=test_anamoly
+      - DOCKER_INFLUXDB_INIT_BUCKET=anomaly_detection
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=anomaly-detection-token-change-me-in-production
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - ./docker/influxdb/init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - anomaly-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: anomaly-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    depends_on:
+      - influxdb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - anomaly-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: anomaly-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - anomaly-network
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: anomaly-node-exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - anomaly-network
+
+  anomaly-detector:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: anomaly-detector-app
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=anomaly-detection-token-change-me-in-production
+      - INFLUXDB_ORG=test_anamoly
+      - INFLUXDB_BUCKET=anomaly_detection
+      - PROMETHEUS_URL=http://prometheus:9090
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs
+      - ./models:/app/models
+      - ./outputs:/app/outputs
+    depends_on:
+      - influxdb
+      - prometheus
+    networks:
+      - anomaly-network
+    # Uncomment to run in training mode
+    # command: ["python", "src/main.py", "--mode", "train", "--dataset", "dataset.csv"]
+    # Uncomment to run in monitoring mode
+    # command: ["python", "src/main.py", "--mode", "monitor", "--monitoring-interval", "30"]
+
+volumes:
+  influxdb_data:
+  grafana_data:
+  prometheus_data:
+
+networks:
+  anomaly-network:
+    driver: bridge
