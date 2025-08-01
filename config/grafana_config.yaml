@@ -1,0 +1,90 @@
+# Grafana Configuration
+grafana:
+  url: "http://localhost:3000"
+  admin_user: "admin"
+  admin_password: "admin"
+  
+# Dashboard Configuration
+dashboard:
+  uid: "anomaly-detection"
+  title: "Real-Time Anomaly Detection"
+  refresh_rate: "30s"
+  time_range: "1h"
+  auto_refresh: true
+  
+# Data Source Configuration
+datasource:
+  name: "InfluxDB"
+  type: "influxdb"
+  url: "http://localhost:8086"
+  database: "anomaly_detection"
+  query_language: "flux"
+  
+# Panel Configuration
+panels:
+  cpu_usage_comparison:
+    title: "CPU Usage: Actual vs Forecasted"
+    type: "timeseries"
+    refresh_interval: "30s"
+    
+  anomaly_detection_points:
+    title: "Detected Anomalies"
+    type: "timeseries"
+    refresh_interval: "30s"
+    
+  current_status:
+    title: "Current Anomaly Status"
+    type: "stat"
+    refresh_interval: "10s"
+    
+  anomaly_count:
+    title: "Anomalies (Last Hour)"
+    type: "stat"
+    refresh_interval: "30s"
+    
+  confidence_score:
+    title: "Detection Confidence"
+    type: "gauge"
+    refresh_interval: "30s"
+    
+  anomaly_rate:
+    title: "Anomaly Rate (24h)"
+    type: "gauge"
+    refresh_interval: "5m"
+
+# Alert Configuration
+alerts:
+  high_anomaly_rate:
+    enabled: true
+    threshold: 10  # percentage
+    time_window: "1h"
+    notification_channels: ["email", "slack"]
+    
+  no_data_alert:
+    enabled: true
+    threshold: "5m"  # no data for 5 minutes
+    notification_channels: ["email"]
+    
+  sustained_anomaly:
+    enabled: true
+    threshold: 5  # consecutive anomalies
+    notification_channels: ["email", "slack", "webhook"]
+
+# Notification Channels
+notifications:
+  email:
+    enabled: false
+    smtp_host: "smtp.example.com"
+    smtp_port: 587
+    from_address: "alerts@example.com"
+    to_addresses: ["admin@example.com"]
+    
+  slack:
+    enabled: false
+    webhook_url: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+    channel: "#alerts"
+    
+  webhook:
+    enabled: false
+    url: "https://your-webhook-endpoint.com/alerts"
+    method: "POST"

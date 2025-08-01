@@ -10,12 +10,13 @@ import yaml
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from data_preprocessing import CPUUsageProcessor
-from anomaly_model import CPUAnomalyDetector
-from model_evaluation import ModelEvaluator
-from prometheus_client import PrometheusClient, RealTimeAnomalyMonitor
-from logging_config import setup_logging, get_structured_logger
-from influxdb_storage import create_influxdb_storage, InfluxDBAnomalyStorage
+from anomaly_detector.data_preprocessing import CPUUsageProcessor
+from anomaly_detector.detector import CPUAnomalyDetector
+from anomaly_detector.model_evaluation import ModelEvaluator
+from monitoring.metrics_collector import PrometheusClient
+from monitoring.cpu_monitor import RealTimeAnomalyMonitor
+from utils.logger import setup_logging, get_structured_logger
+from storage.influxdb_storage import create_influxdb_storage, InfluxDBAnomalyStorage
 from loguru import logger
 
 
@@ -446,7 +447,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def load_config_from_file(config_file: str = 'config.yaml') -> dict:
+def load_config_from_file(config_file: str = '../config/config.yaml') -> dict:
     """Load configuration from YAML file."""
     config_path = Path(config_file)
     
@@ -464,7 +465,7 @@ def main():
     args = parse_arguments()
     
     # Load configuration from file first
-    file_config = load_config_from_file('config.yaml')
+    file_config = load_config_from_file('../config/config.yaml')
     
     # Configuration - merge file config with command line arguments
     config = {

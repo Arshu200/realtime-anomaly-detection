@@ -1,0 +1,38 @@
+# InfluxDB Configuration
+influxdb:
+  enabled: true
+  url: "http://localhost:8086"
+  token: "PCIUyihftjXbIAQjR8g-xgEas7H5ssaEQG6ppz-V_w-bxnNeC3FM941sgC8Sclmjhs2VmD7PyGV1oOepRw8xrA=="
+  org: "test_anamoly"
+  bucket: "anomaly_detection"
+  batch_size: 100
+  flush_interval: 1000  # milliseconds
+  timeout: 10000  # milliseconds
+  retry_attempts: 3
+  retry_interval: 1000  # milliseconds
+
+# Advanced InfluxDB Settings
+advanced:
+  compression: true
+  use_ssl: false
+  verify_ssl: true
+  connection_pool_size: 10
+  
+# InfluxDB Performance Tuning
+performance:
+  batch_size_high_frequency: 50    # For monitoring intervals ≤10s
+  batch_size_low_resource: 200     # For resource-constrained environments
+  flush_interval_high_frequency: 500  # milliseconds
+  flush_interval_low_resource: 5000   # milliseconds
+
+# Data Retention Policies
+retention:
+  default_policy: "30d"           # Default retention
+  raw_data_retention: "7d"        # Raw high-frequency data
+  aggregated_data_retention: "90d" # Aggregated/downsampled data
+  
+# Schema Configuration
+schema:
+  cpu_metrics_measurement: "cpu_metrics"
+  anomaly_detection_measurement: "anomaly_detection"
+  system_metrics_measurement: "system_metrics"
