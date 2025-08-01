@@ -578,7 +578,7 @@ class CPUAnomalyDetector:
 
 if __name__ == "__main__":
     # Example usage
-    from data_preprocessing import CPUUsageProcessor
+    from .data_preprocessing import CPUUsageProcessor
     
     # Load and preprocess data
     processor = CPUUsageProcessor("dataset.csv")

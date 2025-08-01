@@ -11,7 +11,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 # Add the project root to Python path
-project_root = Path(__file__).parent
+project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 def test_complete_system():
@@ -21,8 +21,8 @@ def test_complete_system():
     # Test 1: Import all modules
     print("1. Testing module imports...")
     try:
-        from influxdb_storage import InfluxDBConfig, InfluxDBAnomalyStorage, create_influxdb_storage
-        from anomaly_model import CPUAnomalyDetector
+        from core.influxdb_storage import InfluxDBConfig, InfluxDBAnomalyStorage, create_influxdb_storage
+        from core.anomaly_model import CPUAnomalyDetector
         from main import AnomalyDetectionSystem, load_config_from_file
         print("   ✅ All modules imported successfully")
     except Exception as e:

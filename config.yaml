@@ -40,8 +40,8 @@ evaluation_plots: true
 
 # File Paths
 default_dataset: "dataset.csv"
-default_model_path: "cpu_anomaly_model.pkl"
-model_metadata_path: "model_metadata.json"
+default_model_path: "outputs/cpu_anomaly_model.pkl"
+model_metadata_path: "outputs/model_metadata.json"
 
 # Prophet Model Parameters
 prophet_daily_seasonality: true

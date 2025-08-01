@@ -10,11 +10,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 # Add the project root to Python path
-project_root = Path(__file__).parent
+project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from influxdb_storage import InfluxDBConfig, InfluxDBAnomalyStorage, create_influxdb_storage
-from anomaly_model import CPUAnomalyDetector
+from core.influxdb_storage import InfluxDBConfig, InfluxDBAnomalyStorage, create_influxdb_storage
+from core.anomaly_model import CPUAnomalyDetector
 from main import load_config_from_file, AnomalyDetectionSystem
 
 
